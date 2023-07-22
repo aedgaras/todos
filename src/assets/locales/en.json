@@ -5,5 +5,8 @@
   "color-mode": {
     "turn-on-light": "Light Mode",
     "turn-on-dark": "Turn on Dark Mode"
+  },
+  "title": {
+    "todos": "Todo's"
   }
 }
