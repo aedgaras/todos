@@ -1,13 +1,17 @@
 import { CssVarsProvider } from '@mui/joy';
-import React, { PropsWithChildren, Suspense } from 'react';
+import React, { Suspense } from 'react';
+import { RouterProvider } from 'react-router-dom';
 import { LoadingSpinner } from '../components';
+import { router } from '../routes';
 import { SessionProvider } from './SessionProvider';
 
-export const AppProvider: React.FC<PropsWithChildren> = (props) => {
+export const AppProvider: React.FC = () => {
     return (
         <CssVarsProvider>
             <Suspense fallback={<LoadingSpinner />}>
-                <SessionProvider>{props.children}</SessionProvider>
+                <SessionProvider>
+                    <RouterProvider router={router} />
+                </SessionProvider>
             </Suspense>
         </CssVarsProvider>
     );
