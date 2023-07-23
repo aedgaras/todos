@@ -14,6 +14,7 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@fontsource/public-sans": "^5.0.5",
+    "@legendapp/state": "^1.6.2",
     "@mui/icons-material": "^5.14.1",
     "@mui/joy": "^5.0.0-alpha.88",
     "@mui/material": "^5.14.1",
@@ -26,6 +27,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-i18next": "^13.0.2",
+    "react-query": "^3.39.3",
     "react-router-dom": "^6.14.2"
   },
   "devDependencies": {
