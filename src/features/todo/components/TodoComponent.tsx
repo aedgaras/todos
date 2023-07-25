@@ -1,11 +1,17 @@
-import { DeleteOutlined } from '@mui/icons-material';
+import { AddCircleOutlined, DeleteOutlined } from '@mui/icons-material';
 import { Checkbox, IconButton, Input } from '@mui/joy';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
+import { useQueryClient } from 'react-query';
+import { SessionContext } from '../../../lib/session';
+import { addTodo } from '../api/addTodo';
+import { deleteTodo } from '../api/deleteTodo';
 import { Todo } from '../types';
 
-export const TodoComponent: React.FC<Todo> = (props) => {
-    const [isChecked, setIsChecked] = useState<boolean>(props.isDone);
-    const [task, setTask] = useState<string>(props.task);
+export const TodoComponent: React.FC<Partial<Todo>> = (props) => {
+    const sessionContext = useContext(SessionContext);
+    const client = useQueryClient();
+    const [isChecked, setIsChecked] = useState<boolean>(props.completed ?? false);
+    const [task, setTask] = useState<string>(props.task ?? '');
 
     return (
         <Input
@@ -16,14 +22,45 @@ export const TodoComponent: React.FC<Todo> = (props) => {
                 py: 1,
                 textDecoration: isChecked ? 'line-through' : 'none',
             }}
+            onKeyDown={(e) => {
+                if (e.key === 'Enter' && !props.id) {
+                    if (task.trim().length !== 0) {
+                        addTodo(client, task, sessionContext?.user.id).then(() => {
+                            setTask('');
+                        });
+                    }
+                }
+            }}
             variant="outlined"
             startDecorator={
-                <Checkbox checked={isChecked} onChange={() => setIsChecked(!isChecked)} />
+                props.id ? (
+                    <Checkbox checked={isChecked} onChange={() => setIsChecked(!isChecked)} />
+                ) : null
             }
             endDecorator={
-                <IconButton variant="plain" size="md">
-                    <DeleteOutlined />
-                </IconButton>
+                props.id ? (
+                    <IconButton
+                        variant="plain"
+                        size="md"
+                        onClick={() => deleteTodo(client, props.id).then((r) => r)}
+                    >
+                        <DeleteOutlined />
+                    </IconButton>
+                ) : (
+                    <IconButton
+                        variant="plain"
+                        size="md"
+                        onClick={() => {
+                            if (task.trim().length !== 0) {
+                                addTodo(client, task, sessionContext?.user.id).then(() => {
+                                    setTask('');
+                                });
+                            }
+                        }}
+                    >
+                        <AddCircleOutlined />
+                    </IconButton>
+                )
             }
             value={task}
             onChange={(e) => setTask(e.target.value)}
