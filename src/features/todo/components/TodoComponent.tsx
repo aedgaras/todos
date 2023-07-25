@@ -5,6 +5,7 @@ import { useQueryClient } from 'react-query';
 import { SessionContext } from '../../../lib/session';
 import { addTodo } from '../api/addTodo';
 import { deleteTodo } from '../api/deleteTodo';
+import { useAutoSaveTask } from '../hooks';
 import { Todo } from '../types';
 
 export const TodoComponent: React.FC<Partial<Todo>> = (props) => {
@@ -12,6 +13,8 @@ export const TodoComponent: React.FC<Partial<Todo>> = (props) => {
     const client = useQueryClient();
     const [isChecked, setIsChecked] = useState<boolean>(props.completed ?? false);
     const [task, setTask] = useState<string>(props.task ?? '');
+
+    useAutoSaveTask(props.id, task, isChecked);
 
     return (
         <Input
@@ -63,7 +66,9 @@ export const TodoComponent: React.FC<Partial<Todo>> = (props) => {
                 )
             }
             value={task}
-            onChange={(e) => setTask(e.target.value)}
+            onChange={(e) => {
+                setTask(e.target.value);
+            }}
         />
     );
 };
